@@ -1,30 +1,21 @@
+import { Routes, Route } from 'react-router'
 import Header from './components/Header'
-import Hero from './components/Hero'
-import FeatureCard from './components/FeatureCard'
+import HomePage from './pages/HomePage'
+import CourtsPage from './pages/CourtsPage'
+import MyBookingsPage from './pages/MyBookingsPage'
 import './App.css'
 
 function App() {
   return (
     <div className="app">
       <Header />
-      <Hero />
-      <section className="features">
-        <h2 className="features-heading">Why CourtFlow?</h2>
-        <div className="features-grid">
-          <FeatureCard
-            title="Find Courts"
-            description="Search for available courts by sport, location, and time slot."
-          />
-          <FeatureCard
-            title="Easy Booking"
-            description="Reserve your court in seconds with our simple booking process."
-          />
-          <FeatureCard
-            title="Manage Schedule"
-            description="View, reschedule, or cancel your bookings anytime."
-          />
-        </div>
-      </section>
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/courts" element={<CourtsPage />} />
+          <Route path="/my-bookings" element={<MyBookingsPage />} />
+        </Routes>
+      </main>
     </div>
   )
 }

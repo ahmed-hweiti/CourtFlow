@@ -29,6 +29,7 @@
 }
 
 .btn-primary {
+  display: inline-block;
   background: #4f8cff;
   color: #fff;
   border: none;
@@ -36,10 +37,12 @@
   padding: 14px 28px;
   font-size: 16px;
   font-weight: 600;
-  cursor: default;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .btn-secondary {
+  display: inline-block;
   background: transparent;
   color: #4f8cff;
   border: 2px solid #4f8cff;
@@ -47,7 +50,8 @@
   padding: 14px 28px;
   font-size: 16px;
   font-weight: 600;
-  cursor: default;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

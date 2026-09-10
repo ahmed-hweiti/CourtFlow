@@ -1,3 +1,24 @@
+.page {
+  padding: 64px 24px;
+  text-align: center;
+  background: #f9fafb;
+}
+
+.page-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 12px;
+}
+
+.page-description {
+  font-size: 17px;
+  color: #6b7280;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
 .features {
   padding: 56px 24px;
   background: #f9fafb;

@@ -27,7 +27,17 @@
 .header-link {
   font-size: 15px;
   color: #b0b0c8;
-  cursor: default;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.header-link:hover {
+  color: #fff;
+}
+
+.header-link.active {
+  color: #4f8cff;
+  font-weight: 600;
 }
 
 .header-signin {
