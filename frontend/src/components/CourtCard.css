@@ -1,0 +1,73 @@
+.court-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.court-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.court-card-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.court-card-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.court-card-status.available {
+  color: #059669;
+  background: #d1fae5;
+}
+
+.court-card-status.unavailable {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.court-card-sport {
+  font-size: 15px;
+  font-weight: 500;
+  color: #4f8cff;
+  margin: 0;
+}
+
+.court-card-location {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.court-card-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 4px 0 8px;
+}
+
+.court-card-button {
+  background: #4f8cff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: default;
+  margin-top: auto;
+}

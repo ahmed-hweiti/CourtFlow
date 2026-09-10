@@ -1,0 +1,29 @@
+.courts-page {
+  padding: 64px 24px;
+  background: #f9fafb;
+}
+
+.courts-page-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+.courts-page-description {
+  font-size: 17px;
+  color: #6b7280;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.courts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
