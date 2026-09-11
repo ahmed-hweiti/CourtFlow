@@ -20,6 +20,52 @@
   text-align: center;
 }
 
+.courts-filters {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 0 auto 32px;
+}
+
+.courts-search-input {
+  flex: 1 1 280px;
+  max-width: 400px;
+  padding: 10px 14px;
+  font-size: 15px;
+  color: #374151;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.courts-search-input:focus {
+  outline: none;
+  border-color: #4f8cff;
+}
+
+.courts-sport-select {
+  padding: 10px 14px;
+  font-size: 15px;
+  color: #374151;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.courts-sport-select:focus {
+  outline: none;
+  border-color: #4f8cff;
+}
+
+.courts-no-results {
+  font-size: 16px;
+  color: #6b7280;
+  text-align: center;
+  margin: 32px 0;
+}
+
 .courts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
