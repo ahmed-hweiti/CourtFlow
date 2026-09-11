@@ -7,3 +7,8 @@ export async function getCourts(): Promise<Court[]> {
   const response = await axios.get<Court[]>(`${API_BASE_URL}/courts`)
   return response.data
 }
+
+export async function getCourt(id: number): Promise<Court> {
+  const response = await axios.get<Court>(`${API_BASE_URL}/courts/${id}`)
+  return response.data
+}

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router'
 import type { Court } from '../types/Court'
 import './CourtCard.css'
 
@@ -6,6 +7,12 @@ interface CourtCardProps {
 }
 
 function CourtCard({ court }: CourtCardProps) {
+  const navigate = useNavigate()
+
+  function handleBookCourt() {
+    navigate(`/courts/${court.id}/book`)
+  }
+
   return (
     <article className="court-card">
       <div className="court-card-header">
@@ -21,7 +28,13 @@ function CourtCard({ court }: CourtCardProps) {
       <p className="court-card-price">
         JOD {court.pricePerHour} / hour
       </p>
-      <button className="court-card-button">View Court</button>
+      <button
+        className="court-card-button"
+        onClick={handleBookCourt}
+        disabled={!court.available}
+      >
+        {court.available ? 'Book Court' : 'Unavailable'}
+      </button>
     </article>
   )
 }

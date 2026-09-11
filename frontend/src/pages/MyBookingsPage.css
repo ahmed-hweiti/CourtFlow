@@ -1,0 +1,121 @@
+.bookings-page {
+  padding: 64px 24px;
+  background: #f9fafb;
+}
+
+.bookings-page-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+.bookings-page-description {
+  font-size: 17px;
+  color: #6b7280;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.bookings-status {
+  font-size: 16px;
+  color: #6b7280;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.bookings-error {
+  font-size: 16px;
+  font-weight: 600;
+  color: #b91c1c;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.bookings-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.booking-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.booking-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.booking-card-court {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.booking-card-sport {
+  font-size: 12px;
+  font-weight: 600;
+  color: #059669;
+  background: #d1fae5;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.booking-card-location {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.booking-card-detail {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 4px 0 0;
+}
+
+.booking-card-customer {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.booking-cancel-button {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.booking-cancel-button:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .bookings-page {
+    padding: 40px 16px;
+  }
+}

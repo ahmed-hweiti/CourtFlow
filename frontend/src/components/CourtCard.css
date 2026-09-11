@@ -68,6 +68,12 @@
   padding: 10px 0;
   font-size: 14px;
   font-weight: 600;
-  cursor: default;
+  cursor: pointer;
   margin-top: auto;
+}
+
+.court-card-button:disabled {
+  background: #d1d5db;
+  color: #6b7280;
+  cursor: default;
 }
