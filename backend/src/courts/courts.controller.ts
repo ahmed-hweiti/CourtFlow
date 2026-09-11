@@ -11,8 +11,8 @@ export class CourtsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    const court = this.courtsService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const court = await this.courtsService.findOne(id);
     if (!court) {
       throw new NotFoundException(`Court with ID ${id} not found`);
     }
