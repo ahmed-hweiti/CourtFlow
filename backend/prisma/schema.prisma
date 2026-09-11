@@ -13,10 +13,25 @@ datasource db {
 }
 
 model Court {
-  id           Int     @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   name         String
   sport        String
   location     String
   pricePerHour Int
-  available    Boolean @default(true)
+  available    Boolean   @default(true)
+  bookings     Booking[]
+}
+
+model Booking {
+  id            Int      @id @default(autoincrement())
+  customerName  String
+  customerEmail String
+  bookingDate   DateTime @db.Date
+  startTime     String
+  createdAt     DateTime @default(now())
+
+  courtId Int
+  court   Court    @relation(fields: [courtId], references: [id])
+
+  @@unique([courtId, bookingDate, startTime])
 }

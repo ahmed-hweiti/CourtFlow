@@ -16,6 +16,7 @@ const courts = [
 ];
 
 async function main() {
+  await prisma.booking.deleteMany();
   await prisma.court.deleteMany();
   await prisma.court.createMany({ data: courts });
 }
