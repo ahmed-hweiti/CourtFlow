@@ -35,3 +35,13 @@ model Booking {
 
   @@unique([courtId, bookingDate, startTime])
 }
+
+// Authentication - stands alone until JWT is wired in.
+// Booking ownership is added in a later migration to keep changes atomic.
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
