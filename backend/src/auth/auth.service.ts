@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -51,9 +52,34 @@ export interface SafeUser {
   createdAt: Date;
 }
 
+/**
+ * Claims carried in the JWT. `sub` is the standard registered claim meaning
+ * "subject" and holds the authenticated user's id; `email` mirrors the
+ * normalized address. NO password, password hash, or other sensitive field
+ * ever goes into the token - the token only proves *who* is authenticated,
+ * not any secret about them.
+ */
+export interface JwtPayload {
+  sub: number;
+  email: string;
+}
+
+/**
+ * Successful login payload: the same SafeUser shape the client already gets
+ * from register, plus the signed access token the client must send back on
+ * subsequent authenticated requests.
+ */
+export interface LoginResult {
+  user: SafeUser;
+  accessToken: string;
+}
+
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async register(
     input: RegisterInput,
@@ -142,9 +168,7 @@ export class AuthService {
     return safeUser;
   }
 
-  async login(
-    input: LoginInput,
-  ): Promise<SafeUser> {
+  async login(input: LoginInput): Promise<LoginResult> {
     // Same runtime type guard as register: verify the actual types BEFORE
     // calling .trim() so malformed input is a 400, not a 500.
     if (
@@ -183,8 +207,9 @@ export class AuthService {
     // are registered. The timing-equalizer below exists for the same reason.
     if (!user) {
       // Unknown email and wrong password are indistinguishable: both do exactly
-      // one bcrypt.compare() (unknown email against the fixed dummy hash), so
-      // response time cannot reveal whether an email is registered.
+      // one bcrypt.compare() (unknown email against the fixed dummy hash),
+      // which helps reduce timing differences between unknown-email and
+      // wrong-password attempts.
       await bcrypt.compare(password, DUMMY_PASSWORD_HASH);
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -204,6 +229,15 @@ export class AuthService {
     // Strip the hash so it can never reach the client.
     const { passwordHash: _passwordHash, ...safeUser } = user;
 
-    return safeUser;
+    // Sign the access token. `sub` (subject) carries the authenticated user's
+    // id and email identifies the same user the SafeUser does; NOTHING secret
+    // (no password, no hash) goes inside. The token only proves *who* is
+    // authenticated.
+    const accessToken = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+    });
+
+    return { user: safeUser, accessToken };
   }
 }
