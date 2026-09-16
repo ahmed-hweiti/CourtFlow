@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { Prisma } from '../generated/prisma/client.js';
@@ -19,8 +20,25 @@ const MIN_PASSWORD_LENGTH = 8;
 /** Lightweight format check; deliberately NOT a full RFC 5322 parser. */
 const EMAIL_FORMAT_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Hash of a throwaway value that represents no real user. It is a FIXED
+ * cost-12 hash (generated once, committed as a constant) rather than one
+ * derived lazily at request time, so an unknown email costs exactly one
+ * bcrypt.compare() - the same work as a wrong-password attempt - which helps
+ * reduce timing differences between unknown-email and wrong-password
+ * attempts. The value is not a secret and must never be reused as an actual
+ * credential.
+ */
+const DUMMY_PASSWORD_HASH =
+  '$2b$12$cMl9fcZ7WDlbhKiwG1.RdeYm0Obkhf0.eGPj3QJnCaBPP51NZB9SS';
+
 export interface RegisterInput {
   name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginInput {
   email: string;
   password: string;
 }
@@ -98,8 +116,9 @@ export class AuthService {
 
     // The pre-check above is best-effort: two concurrent requests can both
     // pass it before either insert lands, so the database's unique index on
-    // email is the real guard against that race. If the constraint fires here,
-    // surface the same friendly 409 instead of leaking Prisma's raw error.
+    // email is the real guard against that race. If the constraint fires
+    // here, surface the same friendly 409 instead of leaking Prisma's raw
+    // error.
     let user: Awaited<ReturnType<typeof this.prisma.user.create>>;
     try {
       user = await this.prisma.user.create({
@@ -115,6 +134,71 @@ export class AuthService {
         );
       }
       throw error;
+    }
+
+    // Strip the hash so it can never reach the client.
+    const { passwordHash: _passwordHash, ...safeUser } = user;
+
+    return safeUser;
+  }
+
+  async login(
+    input: LoginInput,
+  ): Promise<SafeUser> {
+    // Same runtime type guard as register: verify the actual types BEFORE
+    // calling .trim() so malformed input is a 400, not a 500.
+    if (
+      input == null ||
+      typeof input.email !== 'string' ||
+      typeof input.password !== 'string'
+    ) {
+      throw new BadRequestException(
+        'email and password are both required',
+      );
+    }
+
+    const email = input.email.trim().toLowerCase();
+    const { password } = input;
+
+    if (!email || !password) {
+      throw new BadRequestException(
+        'email and password are both required',
+      );
+    }
+
+    // Reuse the same lightweight format check as register so malformed
+    // addresses are a clean 400 instead of a pointless (and slower) 401.
+    if (!EMAIL_FORMAT_PATTERN.test(email)) {
+      throw new BadRequestException(
+        'email must be a valid address like you@example.com',
+      );
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Deliberately the SAME message for "unknown email" and "wrong password"
+    // so an attacker cannot use the error text to enumerate which addresses
+    // are registered. The timing-equalizer below exists for the same reason.
+    if (!user) {
+      // Unknown email and wrong password are indistinguishable: both do exactly
+      // one bcrypt.compare() (unknown email against the fixed dummy hash), so
+      // response time cannot reveal whether an email is registered.
+      await bcrypt.compare(password, DUMMY_PASSWORD_HASH);
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    // bcrypt.compare() re-derives the hash from the candidate password and
+    // compares it to the stored hash. Only the one-way hash ever leaves the
+    // DB, so the plaintext is compared, never stored or logged.
+    const passwordMatches = await bcrypt.compare(
+      password,
+      user.passwordHash,
+    );
+
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     // Strip the hash so it can never reach the client.
